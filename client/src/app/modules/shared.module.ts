@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import {TabsModule}  from 'ngx-bootstrap/tabs'
 
 
 @NgModule({
@@ -11,11 +12,13 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     BsDropdownModule.forRoot(), //forRoot = insure to load all services it need with root module
     ToastrModule.forRoot({
       positionClass:'toast-bottom-right'
-    })
+    }),
+    TabsModule.forRoot()
   ],
   exports:[
     BsDropdownModule,
-    ToastrModule
+    ToastrModule,
+    TabsModule
   ]
 })
 export class SharedModule { }
