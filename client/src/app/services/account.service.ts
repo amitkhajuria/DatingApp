@@ -19,10 +19,10 @@ export class AccountService {
 
   login(model:any)
   {
+    console.log("Login called")
     //return this.http.post(this.baseUrl+`account/login`,model);
     return this.http.post(this.baseUrl+'account/login',model).pipe(
-
-      map((response:User) => {
+      map((response : User) => {
           const user=response;
           if(user)
           {

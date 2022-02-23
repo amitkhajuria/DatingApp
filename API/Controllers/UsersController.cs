@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using API.Data;
 using API.DTOs;
@@ -9,7 +10,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 namespace API.Controllers
 {
     // [ApiController]
@@ -83,6 +83,22 @@ namespace API.Controllers
         public async Task<ActionResult<MemberDto>> GetUser(string username)
         {
            return  await _userRepo.GetMemberAsync(username);
+
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateUser(MemberUpdateDto  memberupdateDto)
+        {
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; //get the username from authenicated token
+            var user = await _userRepo.GetUserByUsernameAsync(username);
+
+            //user.City = memberupdateDto.City;
+            _mapper.Map(memberupdateDto, user);
+
+            _userRepo.Update(user);
+
+            if (await _userRepo.SaveAllAsync()) return NoContent();
+            return BadRequest("Failed to update user");
 
         }
     }

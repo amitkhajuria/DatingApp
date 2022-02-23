@@ -15,14 +15,14 @@ export class NavComponent implements OnInit {
 
   model:any={};
   //loggedIn:boolean;
-  currentUser$ :Observable<User>;
+  //currentUser$:Observable<User>;
 
-  constructor(private accountService:AccountService,private router:Router,
+  constructor(public accountService:AccountService,private router:Router,
             private toastr:ToastrService) { }
 
   ngOnInit(): void {
     //this.getCurrentUser();
-    this.currentUser$=this.accountService.currentUser$;
+    //this.currentUser$=this.accountService.currentUser$;
   }
   login(){
     this.accountService.login(this.model).subscribe(response => {
@@ -45,7 +45,7 @@ export class NavComponent implements OnInit {
   // getCurrentUser()
   // {
   //   this.accountService.currentUser$.subscribe(user => {
-  //     //this.loggedIn =!!user;
+  //     this.loggedIn =!!user;  //!! turm object to boolean
   //   },error => {
   //     console.log(error);
   //   })

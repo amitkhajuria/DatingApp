@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
   users :any;
 
   constructor(
-    // private http:HttpClient,
+    private http:HttpClient,
     private accountService: AccountService){
 
   }
@@ -26,18 +26,18 @@ export class AppComponent implements OnInit {
   
   setCurrentUser()
   {
-    const user:User =JSON.parse(localStorage.getItem('user'));
+    const user:User = JSON.parse(localStorage.getItem('user'));
+    this.accountService.setcurrentUser(user);
   }
 
-  // getUsers(){
-  //   this.http.get('https://localhost:5001/api/users').subscribe(response => {
-  //               this.users=response;
-  //             },error => {
-  //               console.log(error);
-  //           },() => {
-  //               console.log('completed');
-  //   })
-    //throw new Error("Method not implememted")
-  //}
+  getUsers(){
+    this.http.get('https://localhost:5001/api/users').subscribe(response => {
+                this.users=response;
+              },error => {
+                console.log(error);
+            },() => {
+                console.log('completed');
+    })
+  }
  
 }
