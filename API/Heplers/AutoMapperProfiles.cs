@@ -13,7 +13,7 @@ namespace API.Heplers
         //    CreateMap<AppUser,MemberDto>()
         //         .ForMember(dest=>dest.PhotoUrl,opt=>opt.MapFrom(src=>
         //             src.Photos.FirstOrDefault(x=>x.IsMain).Url));
-         CreateMap<AppUser,MemberDto>()
+            CreateMap<AppUser,MemberDto>()
                 .ForMember(dest=>dest.PhotoUrl,opt=>opt.MapFrom(src=>
                     src.Photos.FirstOrDefault(x=>x.IsMain).Url))
                 .ForMember(dest=> dest.Age, opt=> opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
@@ -21,6 +21,8 @@ namespace API.Heplers
            CreateMap<Photo,PhotoDto>();
 
            CreateMap<MemberUpdateDto,AppUser>(); // for mapping memberupdate with appuser
+
+           CreateMap<RegisterDto, AppUser>();
        }
     }
 }
