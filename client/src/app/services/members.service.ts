@@ -1,9 +1,10 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Member } from '../models/member';
+import { PaginatedResult } from '../models/pagination';
 
 // const httpOptions={
 //   headers:new HttpHeaders({
@@ -14,11 +15,55 @@ import { Member } from '../models/member';
   providedIn: 'root'
 })
 export class MembersService {
+  
   baseUrl = environment.apiUrl;
 
-  members: Member[]=[];
+  members: Member[] = [];
+  paginatedResult: PaginatedResult<Member[]> = new PaginatedResult<Member[]>();
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
+
+  getMembers(page?: number, itemsPerPage?: number) {
+
+    console.log('getMembers service called'); console.log(this.baseUrl);
+    
+    let params = new HttpParams();
+    if (page !== null && itemsPerPage !== null) {
+      params = params.append('pageNumber', page.toString());
+      params = params.append('pageSize', itemsPerPage.toString());
+    }
+
+   
+    //console.log("httpOptions:");//console.log( httpOptions);
+
+
+    return this.http.get<Member[]>(this.baseUrl + 'users', { observe: 'response', params }).pipe(
+      map(response => {
+        this.paginatedResult.result = response.body;
+        if (response.headers.get('Pagination') !== null) {
+          this.paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+        }
+        return this.paginatedResult;
+      })
+    )
+  }
+
+
+  // getMembers() {
+
+  //   if (this.members.length > 0) return of(this.members); // returm from service   , caching
+
+  //   console.log('getMembers service called'); console.log(this.baseUrl);
+  //   //console.log("httpOptions:");//console.log( httpOptions);
+
+  //   return this.http.get<Member[]>(this.baseUrl + 'users').pipe(
+  //     map(members => {
+  //       this.members = members;
+  //       console.log(members);
+  //       return members;
+  //     })
+  //   )
+  // }
 
   // getMembers(){
   //   console.log('getMembers service called');
@@ -28,34 +73,22 @@ export class MembersService {
   //   return this.http.get<Member[]>(this.baseUrl+'users')
   // }
 
-  getMembers(){
 
-    if(this.members.length > 0) return of(this.members); // returm from service
-    
-    console.log('getMembers service called');console.log(this.baseUrl);
-    //console.log("httpOptions:");//console.log( httpOptions);
 
-    return this.http.get<Member[]>(this.baseUrl+'users').pipe(
-      map( members => {
-        this.members=members;
-        console.log(members);
-        return members;
-      })
-    )
-  }
-  
+
+
   // getMember(username:string){
   //   console.log('getMember service called');
   //  //return this.http.get<Member>(this.baseUrl+'users/'+username,httpOptions)
   //   return this.http.get<Member>(this.baseUrl+'users/'+username)
   // }
 
-  getMember(username:string){
-    const member=this.members.find(x=>x.username === username)
-    if(member !== undefined) return of(member);
+  getMember(username: string) {
+    const member = this.members.find(x => x.username === username)
+    if (member !== undefined) return of(member);
 
     console.log('getMember service called');
-    return this.http.get<Member>(this.baseUrl+'users/'+username)
+    return this.http.get<Member>(this.baseUrl + 'users/' + username)
   }
 
   // updateMember(member:Member){
@@ -63,14 +96,14 @@ export class MembersService {
   //   return this.http.put(this.baseUrl+'users',member);
   // }
 
-  
-  updateMember(member:Member){
+
+  updateMember(member: Member) {
 
     console.log('updateMember service called');
-    return this.http.put(this.baseUrl+'users',member).pipe(
-      map(()=> {
-        const index= this.members.indexOf(member);  //get the member from service
-        this.members[index]=member;
+    return this.http.put(this.baseUrl + 'users', member).pipe(
+      map(() => {
+        const index = this.members.indexOf(member);  //get the member from service
+        this.members[index] = member;
       })
     )
   }
