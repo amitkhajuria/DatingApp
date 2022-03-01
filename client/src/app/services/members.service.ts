@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
+import { of, pipe } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Member } from '../models/member';
@@ -20,19 +20,28 @@ export class MembersService {
   baseUrl = environment.apiUrl;
 
   members: Member[] = [];
-  paginatedResult: PaginatedResult<Member[]> = new PaginatedResult<Member[]>();
+  //paginatedResult: PaginatedResult<Member[]> = new PaginatedResult<Member[]>();
+  memberCache=new Map(); // for caching
 
   constructor(private http: HttpClient) { }
 
   // getMembers(page?: number, itemsPerPage?: number) {
   getMembers(userParams: UserParams) {
 
+    console.log(Object.values(userParams).join('-'));
+    var response=this.memberCache.get(Object.values(userParams).join('-'));
+    if(response){
+      return of(response);
+    }
+
     console.log('getMembers service called'); console.log(this.baseUrl);
+
     let params = this.getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
 
     params = params.append('minAge', userParams.minAge.toString());
     params = params.append('maxAge', userParams.maxAge.toString());
     params = params.append('gender', userParams.gender);
+    params = params.append('orderBy', userParams.orderBy);
     console.log("params"); console.log(params);
 
     // return this.http.get<Member[]>(this.baseUrl + 'users', { observe: 'response', params }).pipe(
@@ -45,7 +54,14 @@ export class MembersService {
     //   })
     // )
 
-    return this.getPaginatedResult<Member[]>(this.baseUrl + 'users', params);
+    //return this.getPaginatedResult<Member[]>(this.baseUrl + 'users', params)
+
+    return this.getPaginatedResult<Member[]>(this.baseUrl + 'users', params)
+      .pipe(map(response => {
+        this.memberCache.set(Object.values(userParams).join('-'),response);
+        return response;
+      }))
+     
 
   }
 
