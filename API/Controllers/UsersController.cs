@@ -48,10 +48,23 @@ namespace API.Controllers
         //[AllowAnonymous]
         public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
         {
+            //added filtering
+            var user = await _userRepo.GetUserByUsernameAsync(User.GetUserName());
+            userParams.CurrentUserName = user.UserName;
+
+            if(string.IsNullOrEmpty(userParams.Gender))
+                userParams.Gender=user.Gender == "male" ? "female" : "male";
 
             var users = await _userRepo.GetMembersAsync(userParams);
+
             Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
             return Ok(users);
+
+            ///////////////////////
+            //var users = await _userRepo.GetMembersAsync(userParams);
+            //Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
+            //return Ok(users);
+            //////////////////////
 
             //var users=await _userRepo.GetMembersAsync();
             //return Ok(users);
