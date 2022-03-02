@@ -21,7 +21,7 @@ export class MembersService {
 
   members: Member[] = [];
   //paginatedResult: PaginatedResult<Member[]> = new PaginatedResult<Member[]>();
-  memberCache=new Map(); // for caching
+  memberCache = new Map(); // for caching
 
   constructor(private http: HttpClient) { }
 
@@ -29,8 +29,8 @@ export class MembersService {
   getMembers(userParams: UserParams) {
 
     console.log(Object.values(userParams).join('-'));
-    var response=this.memberCache.get(Object.values(userParams).join('-'));
-    if(response){
+    var response = this.memberCache.get(Object.values(userParams).join('-'));
+    if (response) {
       return of(response);
     }
 
@@ -58,10 +58,10 @@ export class MembersService {
 
     return this.getPaginatedResult<Member[]>(this.baseUrl + 'users', params)
       .pipe(map(response => {
-        this.memberCache.set(Object.values(userParams).join('-'),response);
+        this.memberCache.set(Object.values(userParams).join('-'), response);
         return response;
       }))
-     
+
 
   }
 
@@ -123,6 +123,26 @@ export class MembersService {
         this.members[index] = member;
       })
     )
+  }
+
+  addLike(username: string) {
+    return this.http.post(this.baseUrl + 'likes/' + username, {});
+  }
+
+  // getLikes(predicate: string) {
+  //   return this.http.get(this.baseUrl + 'likes?=' + predicate);
+  // }
+  // getLikes(predicate: string) {
+  //   console.log('getLikes'); console.log(predicate);
+  //   return this.http.get<Partial<Member[]>>(this.baseUrl + 'likes?predicate=' + predicate);
+  // }
+
+  getLikes(predicate: string,pageNumber,pageSize) {
+    let params=this.getPaginationHeaders(pageNumber,pageSize);
+    params=params.append('predicate',predicate);
+
+    console.log('getLikes'); console.log(predicate);
+    return this.getPaginatedResult<Partial<Member[]>>(this.baseUrl+'likes',params);
   }
 
   private getPaginatedResult<T>(url, params) {
