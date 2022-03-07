@@ -27,6 +27,7 @@ import { LoadingInterceptor } from './interceptors/loading.interceptor';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { RegisterReactiveComponent } from './register-reactive/register-reactive.component';
 import { DateInputComponent } from './forms/date-input/date-input.component';
+import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { DateInputComponent } from './forms/date-input/date-input.component';
     MemberEditComponent,
     PhotoEditorComponent,
     RegisterReactiveComponent,
-    DateInputComponent
+    DateInputComponent,
+    MemberMessagesComponent
   ],
   imports: [
     BrowserModule,

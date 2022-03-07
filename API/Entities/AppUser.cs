@@ -37,5 +37,10 @@ namespace API.Entities
         public ICollection<UserLike> LikedByUsers { get; set; } //list of users who has liked the currently logged in user
         public ICollection<UserLike> LikedUsers { get; set; } //list of users which currently logged in user has liked
 
+        public ICollection<Message> MessagesSent { get; set; }
+
+        public ICollection<Message> MessagesReceived { get; set; }
+
+
     }
 }

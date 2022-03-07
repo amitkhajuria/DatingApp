@@ -11,6 +11,7 @@ import { MemberDetailComponent } from './members/member-detail/member-detail.com
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { MessagesComponent } from './messages/messages.component';
+import { MemberDetailedResolver } from './resolvers/member-detailed.resolver';
 import { TestComponent } from './test/test.component';
 
 // const routes: Routes = [
@@ -32,7 +33,10 @@ const routes: Routes = [
     canActivate:[AuthGuard],
     children:[
       {path:'members',component:MemberListComponent}, //canActivate:[AuthGuard]
-      {path:'members/:username',component:MemberDetailComponent},
+     
+      // {path:'members/:username',component:MemberDetailComponent},
+      {path:'members/:username',component:MemberDetailComponent,resolve : {member : MemberDetailedResolver}},
+     
       {path:'member/edit',component:MemberEditComponent,canDeactivate:[PreventUnsavedChangesGuard]},   //for prompting, if leave the site with unsaved changes
       {path:'lists',component:ListsComponent},
       {path:'messages',component:MessagesComponent},

@@ -10,7 +10,7 @@ import { Photo } from "./photo";
         created: string;
         lastActive: string;
         gender:string;
-        intoduction: string;
+        introduction: string;
         lookingFor: string;
         interests: string;
         city: string;
